@@ -1,0 +1,107 @@
+@font-face {
+  font-family: "General Sans";
+  src: url("./assets/fonts/GeneralSans-Variable.ttf") format("truetype");
+  font-weight: 200 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "General Sans";
+  src: url("./assets/fonts/GeneralSans-VariableItalic.ttf") format("truetype");
+  font-weight: 200 800;
+  font-style: italic;
+}
+
+@import "tailwindcss";
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100%;
+}
+
+body {
+  font-family: "General Sans", sans-serif;
+  background: #fafafa;
+  color: #111111;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: black;
+  color: white;
+}
+
+@keyframes float1 {
+  0% { transform: rotate(-12deg) translateY(0px); }
+  50% { transform: rotate(-12deg) translateY(-8px); }
+  100% { transform: rotate(-12deg) translateY(0px); }
+}
+
+@keyframes float2 {
+  0% { transform: rotate(12deg) translateY(0px); }
+  50% { transform: rotate(12deg) translateY(-12px); }
+  100% { transform: rotate(12deg) translateY(0px); }
+}
+
+@keyframes float3 {
+  0% { transform: translateX(-50%) translateY(0px); }
+  50% { transform: translateX(-50%) translateY(-10px); }
+  100% { transform: translateX(-50%) translateY(0px); }
+}
+
+@keyframes float1 {
+
+0%,100%{
+
+transform:rotate(-15deg) translateY(0px);
+
+}
+
+50%{
+
+transform:rotate(-15deg) translateY(-8px);
+
+}
+
+}
+
+@keyframes float2{
+
+0%,100%{
+
+transform:rotate(15deg) translateY(0px);
+
+}
+
+50%{
+
+transform:rotate(15deg) translateY(-10px);
+
+}
+
+}
+
+@keyframes float3{
+
+0%,100%{
+
+transform:translateX(-50%) translateY(0px);
+
+}
+
+50%{
+
+transform:translateX(-50%) translateY(-12px);
+
+}
+
+}
