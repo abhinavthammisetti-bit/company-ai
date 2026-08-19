@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { askCompanyAIStream } from "../services/api";
 import Confetti from "react-confetti";
 import FadeUp from "./FadeUp";
 import FloatingCards from "./FloatingCards";
@@ -17,66 +18,95 @@ export default function Workspace() {
   const [success, setSuccess] = useState(false);
 
   const [showConfetti, setShowConfetti] = useState(false);
+  
+  const [question, setQuestion] = useState("");
+  
+  const [messages, setMessages] = useState([]);
+  
+  const [thinking, setThinking] = useState(false);
 
-  const handleUpload = (uploadedFiles) => {
+  const handleUpload = async (uploadedFiles) => {
 
-    if (!uploadedFiles.length) return;
+  if (!uploadedFiles.length) return;
 
-    setUploading(true);
+  const file = uploadedFiles[0];
 
-    setSuccess(false);
+  setUploading(true);
+  setSuccess(false);
+  setProgress(0);
 
-    setProgress(0);
+  const formData = new FormData();
 
-    let value = 0;
+  formData.append("file", file);
 
-    const timer = setInterval(() => {
+  try {
 
-      value += Math.floor(Math.random() * 12) + 6;
+    const xhr = new XMLHttpRequest();
 
-      if (value > 100) value = 100;
+    xhr.upload.onprogress = (event) => {
 
-      setProgress(value);
+      if (event.lengthComputable) {
 
-      if (value === 100) {
+        const percent = Math.round(
+          (event.loaded * 100) / event.total
+        );
 
-        clearInterval(timer);
-
-        setTimeout(() => {
-
-          setUploading(false);
-
-          setSuccess(true);
-
-          setShowConfetti(true);
-
-          setFiles(prev => {
-
-            const names = prev.map(f => f.name);
-
-            const unique = uploadedFiles.filter(
-
-              file => !names.includes(file.name)
-
-            );
-
-            return [...prev, ...unique];
-
-          });
-
-          setTimeout(() => {
-
-            setShowConfetti(false);
-
-          }, 3000);
-
-        }, 400);
+        setProgress(percent);
 
       }
 
-    }, 80);
+    };
 
-  };
+    xhr.onload = () => {
+
+      setUploading(false);
+
+      if (xhr.status === 200) {
+
+        setSuccess(true);
+
+        setShowConfetti(true);
+
+        setFiles(prev => [...prev, file]);
+
+        setTimeout(() => {
+
+          setShowConfetti(false);
+
+        }, 3000);
+
+      } else {
+
+        alert("Upload Failed");
+
+      }
+
+    };
+
+    xhr.onerror = () => {
+
+      setUploading(false);
+
+      alert("Cannot connect to backend");
+
+    };
+
+    xhr.open(
+      "POST",
+      "https://company-ai-production-0dd7.up.railway.app/api/document/upload"
+    );
+
+    xhr.send(formData);
+
+  } catch (e) {
+
+    setUploading(false);
+
+    alert("Upload Failed");
+
+  }
+
+};
 
   const handleInput = (e) => {
 
@@ -87,6 +117,76 @@ export default function Workspace() {
     e.target.value = "";
 
   };
+  const askAI = async () => {
+
+  if (!question.trim()) return;
+
+  const currentQuestion = question;
+
+  setQuestion("");
+
+  let assistantIndex = 0;
+
+  setMessages(prev => {
+
+    assistantIndex = prev.length + 1;
+
+    return [
+      ...prev,
+      {
+        type: "user",
+        text: currentQuestion
+      },
+      {
+        type: "assistant",
+        text: ""
+      }
+    ];
+
+  });
+
+  setThinking(true);
+
+  try {
+
+    await askCompanyAIStream(
+      "Infosys",
+      currentQuestion,
+
+      async (token) => {
+
+    console.log("TOKEN:", JSON.stringify(token));
+
+    setThinking(false);
+
+    await new Promise(resolve => setTimeout(resolve, 50));
+
+setMessages(prev => {
+
+    const updated = [...prev];
+
+    updated[assistantIndex] = {
+        ...updated[assistantIndex],
+        text: updated[assistantIndex].text + token
+    };
+
+    console.log("CURRENT:", updated[assistantIndex].text);
+
+    return updated;
+
+});
+
+}
+
+    );
+
+  } catch (e) {
+
+    console.error(e);
+
+  }
+
+};
 
   const handleDrop = (e) => {
 
@@ -578,56 +678,86 @@ export default function Workspace() {
 
               {/* Input */}
 
-              <input
-
-                placeholder="Ask anything about your company..."
-
-                className="
-                relative
-                flex-1
-                bg-transparent
-                outline-none
-                text-lg
-                px-2
-                "
-
-              />
+             <input
+  value={question}
+  onChange={(e) => setQuestion(e.target.value)}
+  placeholder="Ask anything about your company..."
+  className="
+  relative
+  flex-1
+  bg-transparent
+  outline-none
+  text-lg
+  px-2
+  "
+/>
 
               {/* Button */}
 
               <button
-
-                className="
-                relative
-                rounded-2xl
-                bg-black
-                text-white
-                px-10
-                py-5
-                font-semibold
-                shadow-xl
-                hover:scale-105
-                active:scale-95
-                transition-all
-                duration-300
-                "
-
-              >
-
-                Ask →
-
-              </button>
+  onClick={askAI}
+  className="
+  relative
+  rounded-2xl
+  bg-black
+  text-white
+  px-10
+  py-5
+  font-semibold
+  shadow-xl
+  hover:scale-105
+  active:scale-95
+  transition-all
+  duration-300
+  "
+>
+  {thinking ? "Thinking..." : "Ask →"}
+</button>
 
             </div>
 
-            {/* Suggestions */}
+            {/* AI Answer */}
 
-            <div className="mt-8 flex items-center justify-between text-sm text-neutral-400">
+{messages.length > 0 && (
+
+  <div className="mt-8 space-y-5">
+
+    {messages.map((msg, index) => (
+
+      <div
+        key={index}
+        className={`rounded-[24px] p-6 shadow-lg border ${
+          msg.type === "user"
+            ? "bg-black text-white ml-20"
+            : "bg-white border-neutral-200 mr-20"
+        }`}
+      >
+
+        <p className="text-xs uppercase tracking-[0.3em] opacity-70 mb-3">
+
+          {msg.type === "user" ? "You" : "Company AI"}
+
+        </p>
+
+        <p className="leading-8 whitespace-pre-wrap">
+
+          {msg.text}
+
+        </p>
+
+      </div>
+
+    ))}
+
+  </div>
+
+)}
+
+<div className="mt-8 flex items-center justify-between text-sm text-neutral-400">
 
   <span>
     AI responses are generated from your uploaded company documents.
   </span>
-
 
 </div>
 
