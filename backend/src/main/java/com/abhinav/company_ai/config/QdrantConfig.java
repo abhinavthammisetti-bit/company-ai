@@ -10,14 +10,9 @@ public class QdrantConfig {
     @Bean
     public WebClient qdrantWebClient() {
 
-        String qdrantUrl = System.getenv("QDRANT_URL");
-
-        if (qdrantUrl == null || qdrantUrl.isBlank()) {
-            qdrantUrl = "http://localhost:6333";
-        }
-
         return WebClient.builder()
-                .baseUrl(qdrantUrl)
+                .baseUrl("http://qdrant.railway.internal:6333")
                 .build();
+
     }
 }
