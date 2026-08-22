@@ -121,21 +121,23 @@ System.out.println("Payload : " + payload);
     );
 
     Map<String, Object> body = Map.of(
-            "vector", vector,
-            "limit", 20,
-            "with_payload", true,
-            "filter", filter
-    );
+        "query", vector,
+        "limit", 20,
+        "with_payload", true,
+        "filter", filter
+);
 
     String response = qdrantWebClient.post()
-            .uri("/collections/company_ai/points/search")
+            .uri("/collections/company_ai/points/query")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(body)
             .retrieve()
             .bodyToMono(String.class)
             .block();
 
+    System.out.println("========== QDRANT SEARCH RESPONSE ==========");
     System.out.println(response);
+    System.out.println("=============================================");
 
     return response;
 }
