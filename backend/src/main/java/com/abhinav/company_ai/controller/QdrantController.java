@@ -13,13 +13,13 @@ public class QdrantController {
         this.qdrantService = qdrantService;
     }
 
-    @GetMapping("/qdrant-health")
-    public String healthCheck() {
-        return qdrantService.healthCheck();
-    }
-
     @GetMapping("/create-qdrant")
     public String createCollection() {
         return qdrantService.createCollection();
+    }
+
+    @GetMapping("/qdrant-collections")
+    public String getCollections() {
+        return qdrantService.getCollections();
     }
 }

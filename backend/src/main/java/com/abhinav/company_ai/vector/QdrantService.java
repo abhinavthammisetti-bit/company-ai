@@ -153,4 +153,12 @@ System.out.println("Payload : " + payload);
                 .bodyToMono(String.class)
                 .block();
     }
+    public String getCollections() {
+
+    return qdrantWebClient.get()
+            .uri("/collections")
+            .retrieve()
+            .bodyToMono(String.class)
+            .block();
+}
 }
