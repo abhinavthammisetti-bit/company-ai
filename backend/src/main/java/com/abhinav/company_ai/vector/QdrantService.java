@@ -175,4 +175,20 @@ public String countPoints() {
             .bodyToMono(String.class)
             .block();
 }
+public String getPoints() {
+
+    Map<String, Object> body = Map.of(
+            "limit", 10,
+            "with_payload", true,
+            "with_vector", false
+    );
+
+    return qdrantWebClient.post()
+            .uri("/collections/company_ai/points/scroll")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(body)
+            .retrieve()
+            .bodyToMono(String.class)
+            .block();
+}
 }

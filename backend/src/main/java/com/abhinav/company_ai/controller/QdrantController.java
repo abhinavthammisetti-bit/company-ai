@@ -17,6 +17,12 @@ public class QdrantController {
     public String createCollection() {
         return qdrantService.createCollection();
     }
+    @GetMapping("/qdrant-points")
+public String getPoints() {
+
+    return qdrantService.getPoints();
+
+}
 
     @GetMapping("/qdrant-collections")
     public String collections() {
