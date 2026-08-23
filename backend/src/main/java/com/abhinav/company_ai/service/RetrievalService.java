@@ -61,11 +61,14 @@ public class RetrievalService {
             for (JsonNode node : results) {
 
     double score =
-            node.path("score").asDouble();
+        node.path("score").asDouble();
 
-    if (score < 0.30) {
-        continue;
-    }
+System.out.println(">>> QDRANT SCORE: " + score);
+
+if (score < 0.30) {
+    System.out.println(">>> CHUNK REJECTED: score below 0.30");
+    continue;
+}
 
     String text =
             node.path("payload")
