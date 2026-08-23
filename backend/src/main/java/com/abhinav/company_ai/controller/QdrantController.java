@@ -19,7 +19,12 @@ public class QdrantController {
     }
 
     @GetMapping("/qdrant-collections")
-    public String getCollections() {
+    public String collections() {
         return qdrantService.getCollections();
+    }
+
+    @GetMapping("/qdrant-count")
+    public String count() {
+        return qdrantService.countPoints();
     }
 }

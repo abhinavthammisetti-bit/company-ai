@@ -161,4 +161,18 @@ System.out.println("Payload : " + payload);
             .bodyToMono(String.class)
             .block();
 }
+public String countPoints() {
+
+    Map<String, Object> body = Map.of(
+            "exact", true
+    );
+
+    return qdrantWebClient.post()
+            .uri("/collections/company_ai/points/count")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(body)
+            .retrieve()
+            .bodyToMono(String.class)
+            .block();
+}
 }
