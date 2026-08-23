@@ -48,7 +48,7 @@ public class RetrievalService {
 
             JsonNode root = mapper.readTree(response);
 
-            JsonNode results = root.path("result");
+            JsonNode results = root.path("result").path("points");
 
             System.out.println(">>> RESULT COUNT: " + results.size());
 
