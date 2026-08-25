@@ -48,7 +48,8 @@ public class EmbeddingService {
             Map<String, Object> body = Map.of(
                     "input", List.of(text),
                     "model", embeddingModel,
-                    "input_type", inputType
+                    "input_type", inputType,
+                    "dimensions", 1024
             );
 
             String response =
