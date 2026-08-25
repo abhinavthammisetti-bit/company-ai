@@ -66,7 +66,7 @@ public class RetrievalService {
 System.out.println(">>> QDRANT SCORE: " + score);
 
 if (score < 0.20) {
-    System.out.println(">>> CHUNK REJECTED: score below 0.30");
+    System.out.println(">>> CHUNK REJECTED: score below 0.20");
     continue;
 }
 
