@@ -49,7 +49,7 @@ public class EmbeddingService {
                     "input", List.of(text),
                     "model", embeddingModel,
                     "input_type", inputType,
-                    "dimensions", 1024
+                    "dimensions", 2048
             );
 
             String response =
