@@ -25,7 +25,7 @@ public class QdrantService {
         Map<String, Object> body = Map.of(
                 "vectors",
                 Map.of(
-                        "size", 1024,
+                        "size", 2048,
                         "distance", "Cosine"
                 )
         );
