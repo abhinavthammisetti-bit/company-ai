@@ -33,10 +33,24 @@ public class ChatOrchestrator {
     Conversation conversation =
             conversationManager.getConversation("default");
 
-    Document document =
+    Document document = null;
+
+if (request.getCompanyName() != null &&
+        !request.getCompanyName().trim().isEmpty()) {
+
+    document =
+            documentSelectionService.findByCompanyName(
+                    request.getCompanyName().trim()
+            );
+}
+
+if (document == null) {
+
+    document =
             documentSelectionService.selectDocument(
                     request.getQuestion()
             );
+}
 
     if (document == null && conversation.hasCompany()) {
 
@@ -97,10 +111,24 @@ public Flux<String> processStream(QuestionRequest request) {
     Conversation conversation =
             conversationManager.getConversation("default");
 
-    Document document =
+    Document document = null;
+
+if (request.getCompanyName() != null &&
+        !request.getCompanyName().trim().isEmpty()) {
+
+    document =
+            documentSelectionService.findByCompanyName(
+                    request.getCompanyName().trim()
+            );
+}
+
+if (document == null) {
+
+    document =
             documentSelectionService.selectDocument(
                     request.getQuestion()
             );
+}
 
     if (document == null && conversation.hasCompany()) {
 
