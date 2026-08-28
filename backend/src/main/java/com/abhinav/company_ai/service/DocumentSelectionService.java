@@ -20,34 +20,75 @@ public class DocumentSelectionService {
 
         List<Document> documents = documentRepository.findAll();
 
-        String lowerQuestion = question.toLowerCase();
+        if (question == null || question.trim().isEmpty()) {
+            return documents.size() == 1 ? documents.get(0) : null;
+        }
 
+        String lowerQuestion = question.toLowerCase().trim();
+
+        // =====================================================
+        // STEP 1: Exact/full company-name match
+        // =====================================================
+        // This MUST happen before individual-word matching.
+        // Example:
+        // "What is TCS leave policy?"
+        // should match "TCS", not "TCS Technologies".
+        //
         for (Document document : documents) {
 
-            String company = document.getCompanyName().toLowerCase();
+            String company = document.getCompanyName()
+                    .toLowerCase()
+                    .trim();
 
-            // Match full company name
-            if (lowerQuestion.contains(company)) {
+            if (containsWholePhrase(lowerQuestion, company)) {
                 return document;
             }
+        }
 
-            // Match individual words from company name
+        // =====================================================
+        // STEP 2: Individual-word matching
+        // =====================================================
+        // Used only when there was no full company-name match.
+        //
+        for (Document document : documents) {
+
+            String company = document.getCompanyName()
+                    .toLowerCase()
+                    .trim();
+
             for (String word : company.split("\\s+")) {
 
                 if (word.length() > 2 &&
-                        lowerQuestion.contains(word)) {
+                        containsWholeWord(lowerQuestion, word)) {
 
                     return document;
                 }
             }
         }
 
-        // If only one company exists, use it automatically
+        // =====================================================
+        // STEP 3: If only one company exists
+        // =====================================================
         if (documents.size() == 1) {
             return documents.get(0);
         }
 
         return null;
+    }
+
+    // Check whether a complete phrase exists in the question
+    private boolean containsWholePhrase(String text, String phrase) {
+
+        return text.equals(phrase)
+                || text.matches(".*\\b" + java.util.regex.Pattern.quote(phrase) + "\\b.*");
+    }
+
+    // Check whether a complete word exists in the question
+    private boolean containsWholeWord(String text, String word) {
+
+        return text.matches(
+                ".*\\b" + java.util.regex.Pattern.quote(word) + "\\b.*"
+        );
     }
 
     // Return all available company names
