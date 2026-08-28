@@ -62,4 +62,14 @@ public class DocumentService {
 
         return document;
     }
+    public void reindexDocument(Document document) {
+
+    System.out.println("==================================");
+    System.out.println("RE-INDEXING DOCUMENT");
+    System.out.println("Company : " + document.getCompanyName());
+    System.out.println("File    : " + document.getFileName());
+    System.out.println("==================================");
+
+    chunkService.createChunks(document);
+}
 }
