@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/document")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin("*")
 public class DocumentController {
 
     private final PdfService pdfService;
