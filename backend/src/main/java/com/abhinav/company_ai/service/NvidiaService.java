@@ -31,6 +31,8 @@ public class NvidiaService {
     public String askNvidia(String prompt) {
 
     try {
+        System.out.println(">>> NVIDIA MODEL = " + model);
+        System.out.println(">>> NVIDIA URL = " + apiUrl);
 
         var body = java.util.Map.of(
                 "model", model,
