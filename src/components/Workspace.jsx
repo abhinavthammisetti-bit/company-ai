@@ -112,7 +112,7 @@ export default function Workspace() {
 
     xhr.open(
   "POST",
-  "https://precious-unity-production-2fca.up.railway.app/api/document/upload"
+  "https://company-ai-production-2948.up.railway.app/api/document/upload"
 );
 
     xhr.send(formData);
