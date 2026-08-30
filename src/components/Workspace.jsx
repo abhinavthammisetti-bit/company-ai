@@ -9,6 +9,8 @@ export default function Workspace() {
 
   const [files, setFiles] = useState([]);
 
+  const [companyName, setCompanyName] = useState("");
+
   const [dragging, setDragging] = useState(false);
 
   const [uploading, setUploading] = useState(false);
@@ -63,19 +65,36 @@ export default function Workspace() {
 
       if (xhr.status === 200) {
 
-        setSuccess(true);
+  setSuccess(true);
 
-        setShowConfetti(true);
+  setShowConfetti(true);
 
-        setFiles(prev => [...prev, file]);
+  setFiles(prev => [...prev, file]);
 
-        setTimeout(() => {
+  const message = xhr.responseText;
 
-          setShowConfetti(false);
+  const match = message.match(
+    /company:\s*(.+)$/i
+  );
 
-        }, 3000);
+  if (match) {
+    const detectedCompany = match[1].trim();
 
-      } else {
+    console.log(
+      ">>> COMPANY DETECTED:",
+      detectedCompany
+    );
+
+    setCompanyName(detectedCompany);
+  }
+
+  setTimeout(() => {
+
+    setShowConfetti(false);
+
+  }, 3000);
+
+} else {
 
         alert("Upload Failed");
 
@@ -92,9 +111,9 @@ export default function Workspace() {
     };
 
     xhr.open(
-      "POST",
-      "https://company-ai-production-0dd7.up.railway.app/api/document/upload"
-    );
+  "POST",
+  "https://precious-unity-production-2fca.up.railway.app/api/document/upload"
+);
 
     xhr.send(formData);
 
@@ -120,6 +139,11 @@ export default function Workspace() {
   const askAI = async () => {
 
   if (!question.trim()) return;
+
+if (!companyName) {
+  alert("Please upload a company PDF first.");
+  return;
+}
 
   const currentQuestion = question;
 
@@ -150,8 +174,8 @@ export default function Workspace() {
   try {
 
     await askCompanyAIStream(
-      "Infosys",
-      currentQuestion,
+  companyName,
+  currentQuestion,
 
       async (token) => {
 
@@ -611,11 +635,20 @@ setMessages(prev => {
 
           <div className="max-w-4xl mx-auto">
 
-            <p className="uppercase tracking-[0.4em] text-xs text-neutral-400 mb-6">
+            <div className="mb-6">
+  <p className="uppercase tracking-[0.4em] text-xs text-neutral-400">
+    AI Assistant
+  </p>
 
-              AI Assistant
-
-            </p>
+  {companyName && (
+    <p className="mt-2 text-sm text-neutral-500">
+      Using knowledge base:{" "}
+      <span className="font-semibold text-black">
+        {companyName}
+      </span>
+    </p>
+  )}
+</div>
 
             <div
               className="
