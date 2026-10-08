@@ -1,4 +1,4 @@
-const API_URL = "https://company-ai-production-2948.up.railway.app/api/chat";
+const API_URL = "http://localhost:8080/api/chat";
 
 export async function askCompanyAIStream(companyName, question, onToken) {
 

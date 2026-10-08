@@ -128,7 +128,7 @@ System.out.println("Payload : " + payload);
 );
 
     String response = qdrantWebClient.post()
-            .uri("/collections/company_ai/points/query")
+           .uri("/collections/company_ai/points/query")
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(body)
             .retrieve()

@@ -112,7 +112,7 @@ export default function Workspace() {
 
     xhr.open(
   "POST",
-  "https://company-ai-production-2948.up.railway.app/api/document/upload"
+  "http://localhost:8080/api/document/upload"
 );
 
     xhr.send(formData);

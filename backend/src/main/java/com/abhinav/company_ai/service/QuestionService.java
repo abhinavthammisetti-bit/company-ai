@@ -129,10 +129,6 @@ System.out.println("========================================");
                 question,
                 context
         );
-        System.out.println("========== SENDING TO NVIDIA ==========");
-System.out.println(prompt);
-System.out.println("=======================================");
-
     return aiProvider.generateStream(
             question,
             prompt
