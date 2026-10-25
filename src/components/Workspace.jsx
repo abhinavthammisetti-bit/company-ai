@@ -112,7 +112,7 @@ export default function Workspace() {
 
     xhr.open(
   "POST",
-  "http://localhost:8080/api/document/upload"
+  "https://company-ai.abhinavthammisetti.blitz.cloud/api/document/upload"
 );
 
     xhr.send(formData);
