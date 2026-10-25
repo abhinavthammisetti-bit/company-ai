@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/api/chat";
+const API_URL = "https://company-ai.abhinavthammisetti.blitz.cloud/api/chat";
 
 export async function askCompanyAIStream(companyName, question, onToken) {
 
